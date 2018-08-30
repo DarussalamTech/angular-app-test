@@ -2,10 +2,10 @@
   <h3 class="text-center">Chat with buyer</h3>
 
   <ul class="list-group">
-    <a href="#" class="list-group-item" (click)="onUserClick('chat-room')" [ngClass]="{active: current == 'chat-room'}">
-      <span class="glyphicon glyphicon-comment" aria-hidden="true" style="margin-right: 2px"></span>
-      Chat Room
-    </a>
+    <!--<a href="#" class="list-group-item" (click)="onUserClick('chat-room')" [ngClass]="{active: current == 'chat-room'}">-->
+      <!--<span class="glyphicon glyphicon-comment" aria-hidden="true" style="margin-right: 2px"></span>-->
+      <!--Chat Room-->
+    <!--</a>-->
     <a *ngFor="let user of users"
       href="#" class="list-group-item"
       (click)="onUserClick(user.username)"

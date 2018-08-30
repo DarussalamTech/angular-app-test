@@ -50,8 +50,6 @@ router.get('/', passport.authenticate("jwt", {session: false}), (req, res, next)
 router.get('/:name1/:name2', passport.authenticate("jwt", {session: false}), (req, res, next) => {
     let response = {success: true};
     getConversationByName(req.params.name1, req.params.name2).then(conversations => {
-        console.log(conversations);
-
         if(!conversations) {
             response.success = false;
             response.msg = "The user could not be found";
@@ -77,12 +75,12 @@ function getConversationByName(participant1, participant2) {
         if (conversation1 == null) {
             return Conversation.findOne({where:{name: combo2}}).then(conversation2 => {
                 if (conversation2 == null) {
-                    getUserByUsername(participant1).then(user1 => {
+                    return getUserByUsername(participant1).then(user1 => {
                         if (user1 == null) {
                             return false;
                         }
 
-                        getUserByUsername(participant2).then(user2 => {
+                        return getUserByUsername(participant2).then(user2 => {
 
                             if (user2 == null) {
                                 return false;
@@ -98,15 +96,17 @@ function getConversationByName(participant1, participant2) {
                                 id: user2.id
                             };
 
-                            let participants = "[{username:"+user1.username+",id:"+user1.id+"}";
-                                participants += "{username:"+user2.username+",id:"+user2.id+"}]";
+                            let participants = "";
 
                             let newConv = {
                                 participants: participants,
                                 name: "" + participantsUser1.username + "-" + participantsUser2.username
                             };
+                            console.log(newConv);
                             //creating new conversation
-                            Conversation.create(newConv);
+                            return Conversation.create(newConv).then(Conv => {
+                                return Conv;
+                            });
                         });
                     });
 
@@ -115,10 +115,7 @@ function getConversationByName(participant1, participant2) {
                 }
             });
         } else {
-
             return getMessagesByConv(conversation1.id);
-
-
         }
     });
 }

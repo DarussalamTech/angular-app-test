@@ -11,6 +11,7 @@ import { ChatService } from "../../services/chat.service";
 })
 
 export class NavbarComponent implements OnInit {
+  haveBuyer : boolean;
 
   constructor(
     private authService: AuthService,
@@ -20,6 +21,10 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    let  userData = this.authService.getUserData();
+    if(userData.user.role == "Buyer") {
+      this.haveBuyer = true;
+    }
   }
 
   onLogoutClick(userID: number): boolean {

@@ -1,7 +1,7 @@
 <div class="container">
   <div class="jumbotron text-center">
-    <h1>MEAN Chat App</h1>
-    <p class="lead">Welcome to my chat application built using the MEAN stack!</p>
+    <h1>Chat App</h1>
+    <p class="lead">Welcome to my chat application!</p>
     <div *ngIf="!this.authService.loggedIn()">
       <a class="btn btn-primary" [routerLink]="['/register']">Register</a>
       <span style="margin-left:4px; margin-right:4px;">or</span>
@@ -16,7 +16,7 @@
   <div class="row">
     <div class="col-md-4 text-center">
       <h3>NodeJS Backend</h3>
-      <p>A rock solid NodeJS server using ExpressJS for request handling and MongoDB for data storage</p>
+      <p>A rock solid NodeJS server using ExpressJS for request handling and Mysql for data storage</p>
       <p>
         <a href="https://nodejs.org/" target="_blank">node</a> |
         <a href="https://expressjs.com/" target="_blank">express</a> |

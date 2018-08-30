@@ -24,8 +24,8 @@
         <li *ngIf="authService.loggedIn()" routerLinkActive="active" (click)="onNavigate()">
           <a routerLink="/chat">Chat</a>
         </li>
-        <li *ngIf="authService.loggedIn()" routerLinkActive="active" (click)="onNavigate()">
-          <a routerLink="/specialmessage">Send special offer</a>
+        <li *ngIf="authService.loggedIn() && !haveBuyer" routerLinkActive="active" (click)="onNavigate()">
+          <a routerLink="/specialmessage"> {{haveBuyer}} Send special offer</a>
         </li>
       </ul>
 

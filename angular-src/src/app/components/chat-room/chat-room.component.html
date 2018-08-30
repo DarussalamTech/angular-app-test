@@ -9,11 +9,11 @@
     <div *ngIf="!userRoleType && !hideSpecialOfferPopup">
       <div class="popup-wrapper">
         <div class="popup-box">
-          <h1>{{username}}</h1>
+          <h1>{{senderName}}{{hideSpecialOfferPopup}}</h1>
           <strong>{{specialOfferMessage}}</strong>
           <strong>{{specialOfferAmount}}</strong>
           <div class="btn-holder">
-            <a href="#" (click)="onUserAcceptRequest(username)" class="btn-accept">accept</a>
+            <a href="#" (click)="onUserAcceptRequest(senderName)" class="btn-accept">accept</a>
             <a href="#" (click)="onUserRejectRequest()" class="btn-reject">reject</a>
           </div>
         </div>

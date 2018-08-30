@@ -56,6 +56,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   hideSpecialOfferPopup: boolean = true;
   specialOfferMessage : string;
   specialOfferAmount : number;
+  senderName : any;
 
   show = false;
 
@@ -74,17 +75,11 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
 
     let userData = this.authService.getUserData();
     this.username = userData.user.username;
-
     if (userData.user.role == "Buyer") {
       this.userRoleType = false;
     } else {
       this.userRoleType = true;
     }
-
-
-
-
-
 
     this.sendForm = this.formBuilder.group({
       message: ['', Validators.required]
@@ -115,7 +110,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.receiveActiveObs.unsubscribe();
+    //this.receiveActiveObs.unsubscribe();
     this.receiveMessageObs.unsubscribe();
   }
 
@@ -129,10 +124,10 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
       }
     } else {
       this.chatService.connect(this.username, () => {
-        if(this.userRoleType) {
-          this.initReceivers()
-        } else {
+        if(!this.userRoleType) {
           this.getSpecialOfferMessage();
+        } else {
+          this.initReceivers()
         }
       });
     }
@@ -140,33 +135,46 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
 
   //Buyer receiving special message
   getSpecialOfferMessage(): void {
-    //this.getUserList();
+    console.log("122");
 
     this.receiveMessageObs = this.chatService.receiveMessage()
       .subscribe(message => {
-        this.hideSpecialOfferPopup = false;
+        if(message.type == "Buyer") {
+          this.hideSpecialOfferPopup = false;
+        } else {
+          this.hideSpecialOfferPopup = true;
+        }
+
         this.specialOfferMessage = message.message;
         this.specialOfferAmount = message.amount;
+        this.senderName = message.sellerName;
         this.state = false;
+      });
+  }
 
+  initReceivers(): void {
+    this.getUserList();
 
-        // this.checkMine(message);
-        // if (message.conversationId == this.conversationId) {
-        //   this.noMsg = false;
-        //   this.messageList.push(message);
-        //   this.scrollToBottom();
-        //   this.msgSound();
-        // } else if (message.mine != true) {
-        //   if (this.notification.timeout) {clearTimeout(this.notification.timeout)};
-        //   this.notification = {
-        //     from: message.from,
-        //     inChatRoom: message.inChatRoom,
-        //     text: message.text,
-        //     timeout: setTimeout(()=>{ this.notify = false }, 4000)
-        //   };
-        //   this.notify = true;
-        //   this.notifSound();
-        // }
+    this.receiveMessageObs = this.chatService.receiveMessage()
+      .subscribe(message => {
+        this.checkMine(message);
+        this.hideSpecialOfferPopup = true;
+        if (message.conversationId == this.conversationId) {
+          this.noMsg = false;
+          this.messageList.push(message);
+          this.scrollToBottom();
+          this.msgSound();
+        } else if (message.mine != true) {
+          if (this.notification.timeout) {clearTimeout(this.notification.timeout)};
+          this.notification = {
+            from: message.from,
+            inChatRoom: message.inChatRoom,
+            text: message.text,
+            timeout: setTimeout(()=>{ this.notify = false }, 4000)
+          };
+          this.notify = true;
+          this.notifSound();
+        }
       });
   }
 
@@ -176,11 +184,19 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
 
   getMessages(name: string): void {
     this.chatService.getConversation(this.username, name).subscribe(data => {
+      console.log(data);
         if (data.success == true) {
+
+          if(data.messages.name !== undefined){
+            this.conversationId = data.messages.id;
+          }
 
           let messages = data.messages || null;
           if (messages && messages.length > 0) {
             for (let message of messages) {
+              console.log("============");
+              console.log(message);
+              this.conversationId = message.conversationId || message.id;
               this.checkMine(message);
             }
 
@@ -252,41 +268,18 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
       });
   }
 
-  initReceivers(): void {
-    this.getUserList();
 
-    this.receiveMessageObs = this.chatService.receiveMessage()
-      .subscribe(message => {
-        this.checkMine(message);
-        if (message.conversationId == this.conversationId) {
-          this.noMsg = false;
-          this.messageList.push(message);
-          this.scrollToBottom();
-          this.msgSound();
-        } else if (message.mine != true) {
-          if (this.notification.timeout) {clearTimeout(this.notification.timeout)};
-          this.notification = {
-            from: message.from,
-            inChatRoom: message.inChatRoom,
-            text: message.text,
-            timeout: setTimeout(()=>{ this.notify = false }, 4000)
-          };
-          this.notify = true;
-          this.notifSound();
-        }
-      });
-  }
 
   onSendSubmit(): void {
+
     let newMessage: Message = {
       created: new Date(),
       from: this.username,
       text: this.sendForm.value.message,
-      conversationId: this.conversationId,
-      inChatRoom: this.chatWith == "chat-room"
+      conversationId: this.conversationId
     };
-
-    //console.log(newMessage);
+    console.log("============");
+    console.log(newMessage);
     this.chatService.sendMessage(newMessage, this.chatWith);
     newMessage.mine = true;
     this.noMsg = false;

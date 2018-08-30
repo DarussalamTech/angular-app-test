@@ -4,5 +4,4 @@ export interface Message {
   from: string;
   text: string;
   conversationId: number;
-  inChatRoom: boolean;
 }

@@ -63,16 +63,14 @@ export class SpecialmessageComponent implements OnInit {
 
   onSendMessage(): void {
 
-
-    //let userData = this.authService.getUserData();
-    //console.log(userData.user.id);
-
+    let userData = this.authService.getUserData();
     this.authService.getOnlineBuyers().subscribe(Buyers => {
 
       if(Buyers.user !== null) {
         for(let i=0; i<Buyers.user.length; i++) {
           this.connectToChat();
           this.specialMessageForm.value.type = "Buyer";
+          this.specialMessageForm.value.sellerName = userData.user.username;
           this.chatService.sendMessage(this.specialMessageForm.value, Buyers.user[i].username);
           this.flashMessagesService.show("Offer sent!", {cssClass: "alert-success", timeout: 3000});
           this.router.navigate(["/chat"]);
