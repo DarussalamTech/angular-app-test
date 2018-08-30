@@ -6,7 +6,7 @@ const ROOT = process.env.ROOT || '';
 
 //Db connection credentional
 const Username = 'root';
-const Password = process.env.Password || '';
+const Password = process.env.Password || 'x@it8@l@iB_m1S24';
 const Database = process.env.Database || 'chat';
 const Host =  process.env.Host || 'localhost';
 const Dialect =  process.env.Dialect || 'mysql';
