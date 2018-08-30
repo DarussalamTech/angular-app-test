@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  onLogoutClick(userID: number): boolean {
+  onLogoutClick(): boolean {
     this.chatService.disconnect();
     let userData = this.authService.getUserData();
     this.authService.logout(userData.user.id).subscribe(data => {
