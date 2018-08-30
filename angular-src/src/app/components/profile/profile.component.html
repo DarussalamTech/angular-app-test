@@ -1,0 +1,8 @@
+<div *ngIf="userProfile" class="container">
+  <h2 class="page-header">{{userProfile.user.username}}'s profile</h2>
+  <ul class="list-group">
+    <li class="list-group-item">Username: {{userProfile.user.username}}</li>
+    <li class="list-group-item">Type: {{userProfile.user.role}}</li>
+    <li class="list-group-item">Status: {{userProfile.user.status}}</li>
+  </ul>
+</div>
